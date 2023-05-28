@@ -1,0 +1,43 @@
+﻿@page "/"
+@using SweetBites.ServerApp.Data;
+@inject HttpClient Http
+
+<h1>Sweet Delights</h1>
+<p>Browse through our delicious sweets and pick your favorites.</p>
+
+
+@if (sweets == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <hr />
+        @foreach (var sweet in sweets)
+        {
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img src="@sweet.ImageUrl" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">@sweet.Name</h5>
+                        <p class="card-text">@sweet.Description</p>
+                        <p class="card-text">
+                            <small class="text-body-secondary">
+                                <i class="bi bi-star-fill"></i> @sweet.ReviewValue from @sweet.NumberOfReviewers reviews
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+@code {
+    private Sweet[]? sweets;
+
+    protected override async Task OnInitializedAsync()
+    {
+        sweets = await Http.GetFromJsonAsync<Sweet[]>("sample-data/weather.json");
+    }
+}

@@ -1,0 +1,72 @@
+﻿@page "/add-new"
+@using SweetBites.ServerApp.Data;
+
+<PageTitle>Add New Sweet</PageTitle>
+
+<h1>Create Your Delight</h1>
+<p>Add a new sweet to our collection. Fill in the details below and share your delightful treats with the world.</p>
+
+
+@inherits ComponentBase
+@inject NavigationManager NavigationManager;
+
+<div class="row">
+    <hr />
+
+    <div class="col-md-6 offset-3">
+        <EditForm Model="@sweet" OnValidSubmit="AddToDatabase">
+
+            <div class="mb-3">
+                <label for="nameInput" class="form-label">Name</label>
+                <InputText type="text" class="form-control" id="nameInput" placeholder="Type sweet name" @bind-Value="@sweet.Name" required />
+            </div>
+            <div class="mb-3">
+                <label for="descriptionInput" class="form-label">Description</label>
+                <InputTextArea class="form-control" id="descriptionInput" rows="3" placeholder="Type a short description" @bind-Value="@sweet.Description" required></InputTextArea>
+            </div>
+
+            <div class="mb-3">
+                <label for="imageUrlInput" class="form-label">Image Url</label>
+                <InputText type="text" class="form-control" id="imageUrlInput" placeholder="Paste image URL" @bind-Value="@sweet.ImageUrl" @oninput="UpdateImagePreview" required />
+            </div>
+
+            <div class="mb-3">
+                <div id="imageUrlInputPreview">
+                    @if (!string.IsNullOrWhiteSpace(sweet.ImageUrl))
+                    {
+                        <img src="@sweet.ImageUrl" style="max-width: 100%;" />
+                    }
+                </div>
+            </div>
+
+            <hr />
+
+            <button type="submit" class="btn btn-outline-success float-right">Add New</button>
+        </EditForm>
+
+    </div>
+</div>
+
+@code {
+    private Sweet sweet = new Sweet
+        {
+            Name = "",
+            Description = "",
+            NumberOfReviewers = 0,
+            ReviewValue = 0,
+            ImageUrl = ""
+        };
+
+    private async Task AddToDatabase()
+    {
+        //Redirect to Home Page
+        NavigationManager.NavigateTo("/");
+    }
+
+    private void UpdateImagePreview(ChangeEventArgs e)
+    {
+        sweet.ImageUrl = e.Value.ToString();
+        StateHasChanged();
+    }
+
+}
